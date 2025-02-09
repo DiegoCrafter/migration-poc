@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: globant-cde-deployment
+  labels:
+    app: globant-cde-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: globant-cde-app
+  template:
+    metadata:
+      labels:
+        app: globant-cde-app
+    spec:
+      containers:
+      - name: globant-cde-container
+        image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app:latest
+        ports:
+        - containerPort: 8000
