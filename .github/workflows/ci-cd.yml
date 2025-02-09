@@ -29,6 +29,15 @@ jobs:
       - name: Run tox
         run: tox
 
+  deploy_to_gcp:
+    runs_on: ubuntu-latest
+    env:
+      REGION: us-central1
+      INSTANCE_CONNECTION_NAME: ${{ secrets.GCP_PROJECT_ID }}:us-central1:globant-cde-db
+      DATABASE_NAME: challenge_database
+      DATABASE_USER: postgres
+
+    steps:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -43,6 +52,14 @@ jobs:
       - name: Configure Docker to use gcloud as a credential helper
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
+      - name: Deploy SQL script to Cloud SQL
+        run: |
+          gcloud sql connect challenge_database --user=$DATABASE_USER --quiet <<EOF
+          \i /database/create_db.sql
+          EOF
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
+
       - name: Build Docker image
         run: |
           docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app .
@@ -51,7 +68,7 @@ jobs:
         run: |
           docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app
 
-      - name: Deploy to Cloud Run
+      - name: Deploy to GCP
         run: |
           IMAGE="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app"
           gcloud run deploy globant-cde-app \
