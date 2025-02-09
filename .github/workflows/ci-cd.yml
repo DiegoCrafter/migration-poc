@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - master
   pull_request:
     branches:
       - develop
@@ -29,3 +28,26 @@ jobs:
 
       - name: Run tox
         run: tox
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.7.0
+        with:
+          version: '416.0.0'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Authenticate with Google Cloud
+        run: echo "${{ secrets.GCP_SA_KEY }}" | gcloud auth activate-service-account --key-file=/dev/stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app .
+
+      - name: Push Docker image to GCR
+        run: |
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app
+
+      - name: Deploy to GKE (Google Kubernetes Engine)
+        run: |
+          gcloud container clusters get-credentials my-cluster --zone us-central1-a --project ${{ secrets.GCP_PROJECT_ID }}
+          kubectl set image deployment/fastapi-deployment fastapi=gcr.io/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app:latest
+          kubectl rollout restart deployment/fastapi-deployment

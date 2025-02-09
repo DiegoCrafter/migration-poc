@@ -1,8 +1,7 @@
 from fastapi import FastAPI
+from app.api import endpoints as health_router
 
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello world from the land down under!"}
+app.include_router(health_router.router, prefix="/v1", tags=["health"])
