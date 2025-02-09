@@ -53,7 +53,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
-          IMAGE="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app"
+          IMAGE="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app"
           gcloud run deploy globant-cde-app \
             --image $IMAGE \
             --platform managed \
