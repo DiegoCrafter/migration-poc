@@ -19,4 +19,12 @@ spec:
         image: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app:latest
         ports:
         - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /v1/health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
 
