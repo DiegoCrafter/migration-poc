@@ -53,6 +53,6 @@ jobs:
 
       - name: Deploy to GKE (Google Kubernetes Engine)
         run: |
-          gcloud container clusters get-credentials my-cluster --zone us-central1-a --project ${{ secrets.GCP_PROJECT_ID }}
-          kubectl set image deployment/fastapi-deployment fastapi=gcr.io/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app:latest
+          gcloud container clusters get-credentials gdec-cluster-1 --zone us-central1 --project ${{ secrets.GCP_PROJECT_ID }}
+          kubectl set image deployment/fastapi-deployment fastapi=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app:latest
           kubectl rollout restart deployment/fastapi-deployment
