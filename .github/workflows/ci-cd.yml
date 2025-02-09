@@ -31,11 +31,9 @@ jobs:
 
   deploy_to_gcp:
     runs-on: ubuntu-latest
+    needs: build_and_test
     env:
-      REGION: us-central1
-      INSTANCE_CONNECTION_NAME: ${{ secrets.GCP_PROJECT_ID }}:us-central1:globant-cde-db
-      DATABASE_NAME: challenge_database
-      DATABASE_USER: postgres
+      INSTANCE_CONNECTION_NAME: ${{ secrets.GCP_PROJECT_ID }}:us-central1:de-challenge-globant-instance
 
     steps:
       - name: Set up Google Cloud SDK
@@ -54,8 +52,8 @@ jobs:
 
       - name: Deploy database schema
         run: |
-          gcloud sql connect $CLOUD_SQL_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} < database/create_db.sql
-          gcloud sql connect $CLOUD_SQL_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} -e "USE $DB_NAME;" < database/create_db.sql
+          gcloud sql connect $INSTANCE_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} < database/create_db.sql
+          gcloud sql connect $INSTANCE_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} -e "USE $DB_NAME;" < database/create_db.sql
 
       - name: Build Docker image
         run: |
