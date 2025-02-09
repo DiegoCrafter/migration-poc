@@ -54,8 +54,8 @@ jobs:
 
       - name: Deploy database schema
         run: |
-          gcloud sql connect $CLOUD_SQL_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} < database/database.sql
-          gcloud sql connect $CLOUD_SQL_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} -e "USE $DB_NAME;" < database/database.sql
+          gcloud sql connect $CLOUD_SQL_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} < database/create_db.sql
+          gcloud sql connect $CLOUD_SQL_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} -e "USE $DB_NAME;" < database/create_db.sql
 
       - name: Build Docker image
         run: |
