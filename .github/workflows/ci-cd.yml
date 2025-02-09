@@ -51,6 +51,14 @@ jobs:
         run: |
           docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app
 
+      - name: Install gke-gcloud-auth-plugin
+        run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+
+      - name: Get Kubernetes credentials
+        run: |
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+          gcloud container clusters get-credentials gdec-cluster-1 --zone us-central1 --project ${{ secrets.GCP_PROJECT_ID }}
+
       - name: Deploy to GKE (Google Kubernetes Engine)
         run: |
           gcloud container clusters get-credentials gdec-cluster-1 --zone us-central1 --project ${{ secrets.GCP_PROJECT_ID }}
