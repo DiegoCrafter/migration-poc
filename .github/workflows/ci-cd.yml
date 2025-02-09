@@ -46,7 +46,7 @@ jobs:
 
       - name: Push Docker image to GCR
         run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/globant-cde-app
 
       - name: Deploy to GKE (Google Kubernetes Engine)
         run: |
