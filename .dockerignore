@@ -1,0 +1,9 @@
+*.pyc
+__pycache__
+.venv
+venv
+.env
+docs
+Jenkinsfile
+sonar-project.properties
+README.md

@@ -1,0 +1,6 @@
+[flake8]
+extend-ignore = E501, E203, E402
+max-line-length = 119
+docstring_style = sphinx
+exclude = .git,__pycache__,venv, app
+whitelist = whitelist.csv
