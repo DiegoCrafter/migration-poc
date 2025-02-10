@@ -47,12 +47,6 @@ jobs:
       - name: Configure Docker to use gcloud as a credential helper
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Deploy database schema
-        run: |
-          gcloud sql connect $INSTANCE_CONNECTION_NAME --user=root --password=${{ secrets.DB_PASSWORD }} --quiet <<EOF
-          \i $(pwd)/create_db.sql
-          EOF
-
       - name: Build Docker image
         run: |
           docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gdec-artifactory/globant-cde-app .
