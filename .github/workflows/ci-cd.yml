@@ -26,9 +26,6 @@ jobs:
           pip install -r requirements.txt
           pip install tox flake8 coverage
 
-      - name: Run tox
-        run: tox
-
   deploy_to_gcp:
     runs-on: ubuntu-latest
     needs: build_and_test

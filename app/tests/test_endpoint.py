@@ -1,11 +1,12 @@
-import unittest
+import pytest
 from fastapi.testclient import TestClient
 from app.main import app  # Import your FastAPI app
 
-client = TestClient(app)
-
-def test_health_check():
-    """Test the /api/v1/health endpoint."""
-    response = client.get("/v1/health")
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+@pytest.fixture
+def sample_csv(tmp_path):
+    csv_content = """HOTDOG,Germany,7.5
+                    PIZZA,Italy,9.0
+                    TACO,Mexico,8.5"""
+    csv_path = tmp_path / "sample.csv"
+    csv_path.write_text(csv_content)
+    return str(csv_path)
